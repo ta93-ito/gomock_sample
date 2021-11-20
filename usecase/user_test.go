@@ -31,7 +31,6 @@ func testUpdate(t *testing.T, in *entity.User) {
 	mockRepo.EXPECT().Update(in).Return(nil)
 
 	err := userUsecase.Update(in)
-	t.Error()
 	if err != nil {
 		t.Errorf(err.Error())
 	}
