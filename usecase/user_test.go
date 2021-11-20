@@ -10,20 +10,29 @@ import (
 )
 
 func TestUpdate(t *testing.T) {
+	t.Run("id and name", func(t *testing.T) {
+		testUpdate(t, &entity.User{ID: 1, Name: "hoge"})
+	})
+	t.Run("id only", func(t *testing.T) {
+		testUpdate(t, &entity.User{ID: 2})
+	})
+	t.Run("name only", func(t *testing.T) {
+		testUpdate(t, &entity.User{Name: "hoge"})
+	})
+}
+
+func testUpdate(t *testing.T, in *entity.User) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
 	mockRepo := mock_repository.NewMockUser(ctrl)
 	userUsecase := NewUserUsecase(mockRepo)
-	param := &entity.User{
-		ID:   1,
-		Name: "hoge",
-	}
 
-	mockRepo.EXPECT().Update(param).Return(nil)
+	mockRepo.EXPECT().Update(in).Return(nil)
 
-	err := userUsecase.Update(param)
+	err := userUsecase.Update(in)
 	if err != nil {
 		t.Errorf(err.Error())
 	}
+
 }
