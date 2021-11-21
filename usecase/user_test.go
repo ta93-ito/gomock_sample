@@ -34,5 +34,4 @@ func testUpdate(t *testing.T, in *entity.User) {
 	if err != nil {
 		t.Errorf(err.Error())
 	}
-
 }

@@ -10,14 +10,24 @@ import (
 )
 
 type UserHandler struct {
-	usecase usecase.UserUsecase
+	usecase *usecase.UserUsecase
 }
 
 type UpdateRequest struct {
-	User entity.User
+	User entity.User `json:"user"`
 }
 
-func (uh *UserHandler) Update(w http.ResponseWriter, r http.Request) {
+func NewUserHandler(usecase *usecase.UserUsecase) *UserHandler {
+	return &UserHandler{usecase: usecase}
+}
+
+func (uh *UserHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodPut {
+		uh.Update(w, r)
+	}
+}
+
+func (uh *UserHandler) Update(w http.ResponseWriter, r *http.Request) {
 	var req UpdateRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
